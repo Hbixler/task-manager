@@ -25,3 +25,4 @@ Route::get('/tasks', [TaskController::class, 'getAll']);
 Route::post('/tasks', [TaskController::class, 'store']);
 Route::put('/tasks/{task_id}', [TaskController::class, 'update']);
 Route::delete('/tasks/{task_id}', [TaskController::class, 'delete']);
+Route::post('/tasks/search', [TaskController::class, 'search']);
