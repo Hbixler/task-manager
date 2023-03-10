@@ -5,11 +5,18 @@
   <div id="app">
     <header>
     <div class="wrapper">
-
-        <nav>
-          <!--<router-link to="/">Home</router-link>-->
-        </nav>
-      </div>
+      <b-row>
+        <b-col>
+          <router-link to="/">Dashboard</router-link>
+        </b-col>
+        <b-col>
+          <router-link to="/search">Search Tasks</router-link>
+       </b-col>
+       <b-col>
+        <router-link to="/insert">Insert Task</router-link>
+      </b-col>
+      </b-row>
+    </div>
     </header>
 
     <router-view />
@@ -20,6 +27,7 @@
 header {
   line-height: 1.5;
   max-height: 100vh;
+  text-align: center;
 }
 
 .logo {

@@ -17,6 +17,11 @@ const router = new VueRouter({
       name: 'task-search',
       // route level code-splitting
       component: () => import('../views/TaskSearch.vue')
+    },
+    {
+      path: '/insert',
+      name: 'task-insert',
+      component: () => import('../views/TaskInsert.vue')
     }
   ]
 })
