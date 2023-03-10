@@ -1,7 +1,9 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
-import App from './App.vue'
-import router from './router'
+import VueRouter from 'vue-router';
+import App from './App.vue';
+import router from './router';
+import axios from 'axios';
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 
 import './assets/main.css'
@@ -10,6 +12,10 @@ import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)
+Vue.use(VueRouter);
+
+Vue.config.productionTip = true;
+Vue.prototype.$axios = axios;
 
 new Vue({
   router,

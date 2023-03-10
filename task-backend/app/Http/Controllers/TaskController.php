@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Task;
 use Illuminate\Http\Request;
 use Validator;
+use DB;
 
 class TaskController extends Controller
 {
@@ -73,5 +74,23 @@ class TaskController extends Controller
         }
         $task->delete();
         return "Task deleted!";
+    }
+
+    public function search(Request $request) {
+        $validator = validator()->make($request->all(), [
+            'task_title' => 'required|string'
+        ]);
+
+        if ($validator->fails()) {
+            return "Title must be string";
+        }
+
+        $title = $request->task_title;
+
+        $tasks = DB::table('tasks')
+            ->where('task_title', 'LIKE', '%'.$title.'%')
+            ->get();
+        
+        return $tasks;
     }
 }
