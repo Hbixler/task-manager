@@ -1,9 +1,14 @@
 <template>
-    <b-container class="mt-3">
-        <b-row>
+    <b-container class="mt-3" style="min-width: 600px">
+        <b-row class="mb-3">
             <b-col>
                 <center><h2>Insert Task</h2></center>
             </b-col>
+        </b-row>
+        <b-row class="mb-5">
+            <b-col><router-link to="/">Home</router-link></b-col>
+            <b-col><router-link to="/search">Search Tasks</router-link></b-col>
+            <b-col><router-link to="/insert">Insert Task</router-link></b-col>
         </b-row>
         <b-row class="mb-2">
             <b-col>
@@ -58,11 +63,9 @@
                     if (this.description) {
                         task.description = this.description;
                     }
-                    console.log(task);
                     this.$axios
                         .post('https://bxlmly5qs5.execute-api.us-east-2.amazonaws.com/api/tasks', task)
                         .then(() => {
-                            console.log('inserted');
                             this.clearScreen();
                         })
                         .catch(err => {
