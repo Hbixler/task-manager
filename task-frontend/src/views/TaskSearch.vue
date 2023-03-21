@@ -60,13 +60,10 @@
                 tasks: []
             }
         },
-        mounted() {
-            // Load tasks here
-        },
         methods: {
             searchTasks() {
                 if (this.titleQuery.trim() === "") {
-                    // GET ALL TASKS
+                    // No search query entered, get all tasks
                     this.$axios
                     .get('https://bxlmly5qs5.execute-api.us-east-2.amazonaws.com/api/tasks')
                     .then(response => {
@@ -77,7 +74,7 @@
                     });
                 }
                 else {
-                    // SEARCH TASKS
+                    // Search for tasks that match title query
                     const data = {
                         task_title: this.titleQuery
                     };
@@ -92,21 +89,11 @@
                 }
             },
             deleteTask(task) {
-                // DELETE HERE
-                let data = {
-                    task_title: task.task_title,
-                    difficulty: task.difficulty,
-                    is_completed: true
-                }
-                if (task.due_date) {
-                    data.due_date = task.due_date;
-                }
-                if (task.description) {
-                    data.description = task.description;
-                }
+                // Delete task
                 this.$axios
-                .delete(`https://bxlmly5qs5.execute-api.us-east-2.amazonaws.com/api/tasks/${task.id}`, data)
+                .delete(`https://bxlmly5qs5.execute-api.us-east-2.amazonaws.com/api/tasks/${task.id}`)
                 .then(() => {
+                    // Task should disappear from screen
                     this.tasks = this.tasks.filter(taskItem => taskItem.id !== task.id);
                 })
                 .catch(err => {
