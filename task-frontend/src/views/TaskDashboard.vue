@@ -1,14 +1,14 @@
 <template>
     <b-container class="mt-3" style="min-width: 600px">
         <b-row class="mb-3">
-            <b-col><center><h2>Today's Tasks</h2></center></b-col>
+            <b-col><center><h2>Top 5 Tasks</h2></center></b-col>
         </b-row>
         <b-row class="mb-5">
             <b-col><router-link to="/">Home</router-link></b-col>
             <b-col><router-link to="/search">Search Tasks</router-link></b-col>
             <b-col><router-link to="/insert">Insert Task</router-link></b-col>
         </b-row>
-        <b-row v-for="(task, index,) in tasks">
+        <b-row v-for="(task, index,) in tasks" :key="`task-${task.id}`">
             <b-card v-if="!task.is_completed" class="mb-3">
                 <b-row>
                     <b-col cols="8">
@@ -42,6 +42,8 @@
         data() {
             return {
                 tasks: [
+                ],
+                allTasks: [
                 ]
             }
         },
@@ -50,12 +52,17 @@
         },
         methods: {
             async getData() {
+                // Load up the tasks
                 this.$axios
                     .get('https://bxlmly5qs5.execute-api.us-east-2.amazonaws.com/api/tasks')
                     .then(response => {
-                        let allTasks = response.data;
-                        allTasks = allTasks.filter(task => !task.is_completed);
-                        allTasks.sort((a,b) => {
+                        this.allTasks = response.data;
+
+                        // Only get tasks that are not completed
+                        this.allTasks = this.allTasks.filter(task => !task.is_completed);
+
+                        // Sort with closer due dates having higher priority
+                        this.allTasks.sort((a,b) => {
                             if (a.due_date && b.due_date) {
                                 if (a.due_date < b.due_date) {
                                     return -1;
@@ -74,11 +81,13 @@
                                 return 1;
                             }
                         });
-                        if (allTasks.length <= 5) {
-                            this.tasks = allTasks;
+
+                        // User can only see top five tasks at a time
+                        if (this.allTasks.length <= 5) {
+                            this.tasks = this.allTasks;
                         }
                         else {
-                            this.tasks = allTasks.slice(0,5);
+                            this.tasks = this.allTasks.slice(0,5);
                         }
                     })
                     .catch(err => {
@@ -86,9 +95,20 @@
                     });
             },
             checked(index) {
+                // User completed task at index
                 let task = this.tasks[index];
                 if (!task.is_completed) {
+                    // Update view to display top five tasks
                     task.is_completed = true;
+                    this.allTasks = this.allTasks.filter(task => !task.is_completed);
+                    if (this.allTasks.length <= 5) {
+                            this.tasks = this.allTasks;
+                    }
+                    else {
+                        this.tasks = this.allTasks.slice(0,5);
+                    }
+
+                    // Prepare task for update
                     let data = {
                         task_title: task.task_title,
                         difficulty: task.difficulty,
@@ -100,6 +120,8 @@
                     if (task.description) {
                         data.description = task.description;
                     }
+
+                    // Update task to be completed
                     this.$axios
                     .put(`https://bxlmly5qs5.execute-api.us-east-2.amazonaws.com/api/tasks/${task.id}`, data)
                     .catch(err => {

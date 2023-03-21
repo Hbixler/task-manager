@@ -45,15 +45,12 @@
                 descriptionState: null
             }
         },
-        mounted() {
-            // Load tasks here
-        },
         methods: {
             insertTask() {
-                // INSERT TASK HERE
                 if (this.validate()) {
+                    // Task meets validation, ready to insert
                     const task = {
-                        task_title: this.title,
+                        task_title: this.title.trim(),
                         difficulty: this.difficulty,
                         is_completed: false
                     }
@@ -61,11 +58,12 @@
                         task.due_date = this.due_date;
                     }
                     if (this.description) {
-                        task.description = this.description;
+                        task.description = this.description.trim();
                     }
                     this.$axios
                         .post('https://bxlmly5qs5.execute-api.us-east-2.amazonaws.com/api/tasks', task)
                         .then(() => {
+                            // Insert successful, reset form
                             this.clearScreen();
                         })
                         .catch(err => {
@@ -77,17 +75,20 @@
                 let isCorrect = true;
                 this.titleState = null;
                 if (this.title.trim() === "" || this.title.trim().length > 30) {
+                    // Title is blank or too long
                     this.titleState = false;
                     isCorrect = false;
                 }
                 this.descriptionState = null;
                 if (this.description.trim().length > 255) {
+                    // Description is too long
                     this.descriptionState = false;
                     isCorrect = false;
                 }
                 return isCorrect;
             },
             clearScreen() {
+                // Reset all form fields and states
                 this.title = "";
                 this.due_date = "";
                 this.difficulty = 1;
